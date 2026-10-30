@@ -1,0 +1,7 @@
+# Pinned to exact versions; review and bump regularly (e.g. `pip list --outdated`, `pip-audit`).
+fastapi==0.162.0
+starlette==1.7.0
+uvicorn==0.54.0
+httpx==0.28.1
+anthropic==2.3.0
+defusedxml==0.7.1

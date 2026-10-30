@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <title>Source Finder</title>
+  <link rel="stylesheet" href="/static/styles.css">
+  <script src="/static/app.js" defer></script>
+</head>
+<body>
+  <header class="hero">
+    <h1>Source Finder</h1>
+    <p class="tagline">Find vetted, peer-reviewed journal articles to cite in a paper, essay, or argument.</p>
+    <form id="search-form" class="search" role="search" autocomplete="off">
+      <label for="q" class="visually-hidden">Topic</label>
+      <input id="q" name="q" type="search" required minlength="3" maxlength="200"
+             placeholder="e.g. AI mistakes in health care" spellcheck="true">
+      <button type="submit">Search</button>
+    </form>
+
+    <details class="explainer">
+      <summary>How are articles vetted and scored?</summary>
+      <div class="explainer-body">
+        <h2>Quality checks: every article shown passes all of these</h2>
+        <p>Works for any field: medicine, engineering, computer science, transportation, social
+          sciences, physical sciences and more.</p>
+        <ul>
+          <li><strong>Peer-reviewed research.</strong> Journal articles, reviews and papers in rated
+            conference proceedings only. No preprints, editorials, letters, comments, news or study protocols.</li>
+          <li><strong>Expert-vetted venue.</strong> The journal or conference must be on at least one list
+            curated by expert committees that review editorial and peer-review standards: MEDLINE (U.S. National
+            Library of Medicine), CWTS Core (Leiden University), the Norwegian Register (levels 1–2) or the
+            Finnish Publication Forum (JUFO 1–3).</li>
+          <li><strong>Not retracted</strong> and no published expression of concern (checked in OpenAlex,
+            Europe PMC and PubMed).</li>
+          <li><strong>Verifiable.</strong> Has a DOI and a real abstract that can be cross-checked in OpenAlex.</li>
+        </ul>
+        <h2>Estimated risk of bias</h2>
+        <p>A 0–100% estimate (lower is better) combining five factors from the abstract, OpenAlex and
+          PubMed records. It adapts the domains of formal appraisal tools such as Cochrane's Risk of Bias
+          tool so they apply to every field:</p>
+        <ul>
+          <li><strong>Study design &amp; safeguards (30%)</strong>: meta-analyses, systematic reviews and
+            randomized experiments score best; quasi-experiments, controlled lab experiments, benchmark
+            evaluations, validated simulations and cohort studies sit in the middle; surveys, case studies,
+            narrative reviews and case reports score worst. Blinding, multiple sites, adjusting for
+            confounders, validation against real-world data and robustness checks lower the risk; pilot,
+            single-site and unblinded studies raise it.</li>
+          <li><strong>Conflicts of interest (25%)</strong>: reads the authors' disclosure statement where
+            PubMed has one. Consulting fees, employment, stock or patents with companies, industry funding
+            or company-affiliated authors raise the risk; a clean disclosure with public funding lowers it.</li>
+          <li><strong>Sample size (15%)</strong>: larger samples, more pooled studies or more benchmark
+            datasets are less prone to chance findings. Not applied to theory, simulations or narrative reviews.</li>
+          <li><strong>Reporting quality (20%)</strong>: promotional wording ("breakthrough",
+            "revolutionary") and causal claims from studies that can't show cause and effect are signs of spin;
+            acknowledging limitations and reporting statistical uncertainty are good signs.</li>
+          <li><strong>Transparency (10%)</strong>: pre-registered protocols score best, then openly shared
+            code or data, then free-to-read full text.</li>
+        </ul>
+        <h2>AI review (optional)</h2>
+        <p>Where enabled, the "Get AI review" button asks Claude to appraise the abstract domain by
+          domain (selection, confounding, measurement, missing data, selective reporting, conflicts of
+          interest and spin) and give its own risk-of-bias estimate with reasons. It only sees the
+          abstract, so it reports its confidence. Like any AI, it can be wrong.</p>
+        <p class="caveat">This is an automated screening aid, not a substitute for reading the paper.
+          Always check the full methods before relying on a source.</p>
+      </div>
+    </details>
+  </header>
+
+  <main>
+    <div class="toolbar">
+      <p id="status" class="status" role="status" aria-live="polite"></p>
+      <label class="sort" id="sort-wrap" hidden>
+        Sort by
+        <select id="sort">
+          <option value="relevance">Relevance</option>
+          <option value="bias">Lowest risk of bias</option>
+          <option value="citations">Most cited</option>
+          <option value="year">Newest</option>
+        </select>
+      </label>
+    </div>
+    <ol id="results" class="results"></ol>
+    <div class="more-wrap">
+      <button id="more" class="more" type="button" hidden>Load more articles</button>
+    </div>
+  </main>
+
+  <template id="card-template">
+    <li class="card">
+      <h2 class="title"><a target="_blank" rel="noopener noreferrer"></a></h2>
+      <p class="meta"></p>
+      <ul class="checks"></ul>
+      <p class="synopsis"></p>
+      <div class="bias">
+        <div class="bias-head">
+          <span class="bias-label">Estimated risk of bias</span>
+          <span class="bias-value"></span>
+        </div>
+        <div class="bias-track"><div class="bias-fill"></div></div>
+        <details class="bias-details">
+          <summary>Why this score?</summary>
+          <ul class="factors"></ul>
+        </details>
+        <div class="ai" hidden>
+          <div class="ai-cta">
+            <button class="ai-btn" type="button">Get AI review</button>
+            <span class="ai-note">Claude appraises the abstract like a research methodologist (about a minute).</span>
+          </div>
+          <p class="ai-error" role="alert" hidden></p>
+          <div class="ai-result" hidden></div>
+        </div>
+      </div>
+      <div class="badges"></div>
+    </li>
+  </template>
+</body>
+</html>
