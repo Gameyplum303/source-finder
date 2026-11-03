@@ -44,7 +44,7 @@ class Settings:
     ai_review_per_minute: int = 6
 
     @classmethod
-    def from_env(cls) -> "Settings":
+    def from_env(cls) -> Settings:
         hosts = tuple(h.strip() for h in _str("ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
                       if h.strip())
         return cls(

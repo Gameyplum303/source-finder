@@ -16,7 +16,7 @@ text.clean_text here, and the frontend renders it with textContent only.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Awaitable, Callable
+from collections.abc import Awaitable, Callable
 
 import httpx
 
