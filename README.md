@@ -1,3 +1,5 @@
+[![Tests](https://github.com/Gameyplum303/source-finder/actions/workflows/tests.yml/badge.svg)](https://github.com/Gameyplum303/source-finder/actions/workflows/tests.yml)
+
 # Source Finder
 
 A website for finding reliable, peer-reviewed sources on any topic in any
